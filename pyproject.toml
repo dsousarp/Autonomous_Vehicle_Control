@@ -10,3 +10,8 @@ dependencies = [
     "numpy>=2.4.2",
     "scipy>=1.17.1",
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"v1_baseline/main.py" = ["E402"]
+"v1_baseline/stress_test.py" = ["E402"]
+"comparison/process_results.py" = ["E402"]

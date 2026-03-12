@@ -81,8 +81,8 @@ def _run_closed_loop(
 
     for k in range(config.sim_steps):
         step_idx = k + config.Tini
-        u_ini = np.array(u_buffer[-config.Tini:])
-        y_ini = np.array(y_buffer[-config.Tini:])
+        u_ini = np.array(u_buffer[-config.Tini :])
+        y_ini = np.array(y_buffer[-config.Tini :])
         y_ref_horizon = y_ref_full[step_idx : step_idx + config.N]
 
         t0 = time.perf_counter()
@@ -140,12 +140,17 @@ def test_high_noise() -> bool:
     results = _run_closed_loop(config, y_ref)
 
     rmse = _compute_rmse_position(results)
-    optimal_pct = 100.0 * sum(1 for s in results["statuses"] if "optimal" in s) / len(results["statuses"])
+    optimal_pct = (
+        100.0
+        * sum(1 for s in results["statuses"] if "optimal" in s)
+        / len(results["statuses"])
+    )
 
     ok = rmse < 5.0 and optimal_pct > 50.0
 
     plot_data["high_noise"] = {
-        "y_hist": results["y_history"], "y_ref": results["y_ref_history"],
+        "y_hist": results["y_history"],
+        "y_ref": results["y_ref_history"],
         "title": "Test 1: High Noise (10x)",
     }
 
@@ -162,13 +167,18 @@ def test_aggressive_reference() -> bool:
     results = _run_closed_loop(config, y_ref)
 
     rmse = _compute_rmse_position(results)
-    optimal_pct = 100.0 * sum(1 for s in results["statuses"] if "optimal" in s) / len(results["statuses"])
+    optimal_pct = (
+        100.0
+        * sum(1 for s in results["statuses"] if "optimal" in s)
+        / len(results["statuses"])
+    )
 
     # Aggressive ref is hard — just check it doesn't diverge
     ok = rmse < 20.0 and optimal_pct > 30.0
 
     plot_data["aggressive_ref"] = {
-        "y_hist": results["y_history"], "y_ref": results["y_ref_history"],
+        "y_hist": results["y_history"],
+        "y_ref": results["y_ref_history"],
         "title": "Test 2: Aggressive Reference",
     }
 
@@ -185,13 +195,18 @@ def test_reduced_data() -> bool:
     results = _run_closed_loop(config, y_ref)
 
     rmse = _compute_rmse_position(results)
-    optimal_pct = 100.0 * sum(1 for s in results["statuses"] if "optimal" in s) / len(results["statuses"])
+    optimal_pct = (
+        100.0
+        * sum(1 for s in results["statuses"] if "optimal" in s)
+        / len(results["statuses"])
+    )
 
     # With reduced data, performance degrades — just check stability
     ok = rmse < 15.0 and optimal_pct > 20.0
 
     plot_data["reduced_data"] = {
-        "y_hist": results["y_history"], "y_ref": results["y_ref_history"],
+        "y_hist": results["y_history"],
+        "y_ref": results["y_ref_history"],
         "title": "Test 3: Reduced Data (T=50)",
     }
 
@@ -218,7 +233,8 @@ def test_tight_constraints() -> bool:
     ok = steering_ok and accel_ok and brake_ok
 
     plot_data["tight_constraints"] = {
-        "y_hist": results["y_history"], "y_ref": results["y_ref_history"],
+        "y_hist": results["y_history"],
+        "y_ref": results["y_ref_history"],
         "title": "Test 4: Tight Constraints",
     }
 
@@ -235,12 +251,17 @@ def test_nonlinear_regime() -> bool:
     results = _run_closed_loop(config, y_ref)
 
     rmse = _compute_rmse_position(results)
-    optimal_pct = 100.0 * sum(1 for s in results["statuses"] if "optimal" in s) / len(results["statuses"])
+    optimal_pct = (
+        100.0
+        * sum(1 for s in results["statuses"] if "optimal" in s)
+        / len(results["statuses"])
+    )
 
     ok = rmse < 20.0 and optimal_pct > 30.0
 
     plot_data["nonlinear"] = {
-        "y_hist": results["y_history"], "y_ref": results["y_ref_history"],
+        "y_hist": results["y_history"],
+        "y_ref": results["y_ref_history"],
         "title": "Test 5: Nonlinear Regime",
     }
 
@@ -268,7 +289,7 @@ def test_step_reference() -> bool:
 
     # Check that it converges to the offset in the second half
     y_hist = results["y_history"]
-    second_half = y_hist[len(y_hist)//2 + 20:]  # skip transient
+    second_half = y_hist[len(y_hist) // 2 + 20 :]  # skip transient
     if len(second_half) > 0:
         final_y_error = abs(np.mean(second_half[:, 1]) - 3.0)
     else:
@@ -277,7 +298,8 @@ def test_step_reference() -> bool:
     ok = final_y_error < 2.0
 
     plot_data["step_ref"] = {
-        "y_hist": results["y_history"], "y_ref": results["y_ref_history"],
+        "y_hist": results["y_history"],
+        "y_ref": results["y_ref_history"],
         "title": "Test 6: Step Reference",
     }
 
@@ -299,12 +321,17 @@ def test_disturbance_rejection() -> bool:
 
     results = _run_closed_loop(config, y_ref, disturbance_fn=disturbance)
     rmse = _compute_rmse_position(results)
-    optimal_pct = 100.0 * sum(1 for s in results["statuses"] if "optimal" in s) / len(results["statuses"])
+    optimal_pct = (
+        100.0
+        * sum(1 for s in results["statuses"] if "optimal" in s)
+        / len(results["statuses"])
+    )
 
     ok = rmse < 5.0
 
     plot_data["disturbance"] = {
-        "y_hist": results["y_history"], "y_ref": results["y_ref_history"],
+        "y_hist": results["y_history"],
+        "y_ref": results["y_ref_history"],
         "title": "Test 7: Disturbance Rejection",
     }
 
@@ -327,11 +354,17 @@ def test_long_horizon() -> bool:
     ok = rmse < 3.0 and max_solve < 2.0
 
     plot_data["long_horizon"] = {
-        "y_hist": results["y_history"], "y_ref": results["y_ref_history"],
+        "y_hist": results["y_history"],
+        "y_ref": results["y_ref_history"],
         "title": "Test 8: Long Horizon (500 steps)",
     }
 
-    logger.info("  RMSE_pos=%.4f m, avg_solve=%.3fs, max_solve=%.3fs", rmse, avg_solve, max_solve)
+    logger.info(
+        "  RMSE_pos=%.4f m, avg_solve=%.3fs, max_solve=%.3fs",
+        rmse,
+        avg_solve,
+        max_solve,
+    )
     logger.info("  %s", PASS if ok else FAIL)
     return ok
 
@@ -339,6 +372,7 @@ def test_long_horizon() -> bool:
 def generate_plots(results_dir: pathlib.Path) -> None:
     """Generate stress test visualization plots."""
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 

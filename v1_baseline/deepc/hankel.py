@@ -26,9 +26,7 @@ def build_hankel_matrix(data: np.ndarray, L: int) -> np.ndarray:
 
     T, n = data.shape
     if T < L:
-        raise ValueError(
-            f"Data length {T} is shorter than Hankel depth {L}."
-        )
+        raise ValueError(f"Data length {T} is shorter than Hankel depth {L}.")
 
     num_cols = T - L + 1
     H = np.empty((L * n, num_cols))

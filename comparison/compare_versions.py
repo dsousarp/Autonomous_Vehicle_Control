@@ -18,6 +18,7 @@ import sys
 
 import numpy as np
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -67,8 +68,7 @@ def main() -> None:
 
     # ---- Console table ----
     header = "  ".join(
-        [f"{'Metric':<30}"]
-        + [f"{m['version']:>16}" for m in all_metrics]
+        [f"{'Metric':<30}"] + [f"{m['version']:>16}" for m in all_metrics]
     )
     print("\n" + "=" * len(header))
     print("  VERSION COMPARISON")
@@ -115,7 +115,9 @@ def main() -> None:
         ax = axes_flat[i]
         vals = [m.get(key, float("nan")) for m in all_metrics]
         colours = plt.cm.tab10(np.linspace(0, 1, max(n_versions, 1)))
-        bars = ax.bar(versions, vals, color=colours[:n_versions], edgecolor="k", linewidth=0.5)
+        bars = ax.bar(
+            versions, vals, color=colours[:n_versions], edgecolor="k", linewidth=0.5
+        )
         ax.set_title(label, fontsize=10)
         ax.tick_params(axis="x", rotation=30, labelsize=8)
         ax.tick_params(axis="y", labelsize=8)
@@ -126,7 +128,9 @@ def main() -> None:
                     bar.get_x() + bar.get_width() / 2,
                     bar.get_height(),
                     f"{v:.4g}",
-                    ha="center", va="bottom", fontsize=7,
+                    ha="center",
+                    va="bottom",
+                    fontsize=7,
                 )
 
     # Hide unused subplots

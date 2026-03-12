@@ -62,7 +62,7 @@ def compute_all_metrics(
     # ------------------------------------------------------------------
     metrics["mean_abs_steering"] = float(np.mean(np.abs(u_hist[:, 0])))
     metrics["mean_abs_acceleration"] = float(np.mean(np.abs(u_hist[:, 1])))
-    metrics["total_control_effort"] = float(np.sum(u_hist ** 2))
+    metrics["total_control_effort"] = float(np.sum(u_hist**2))
 
     # ------------------------------------------------------------------
     #  Solver performance
@@ -80,9 +80,7 @@ def compute_all_metrics(
     statuses = results.get("statuses", [])
     if statuses:
         optimal_count = sum(1 for s in statuses if "optimal" in s)
-        metrics["optimal_solve_pct"] = float(
-            100.0 * optimal_count / len(statuses)
-        )
+        metrics["optimal_solve_pct"] = float(100.0 * optimal_count / len(statuses))
     else:
         metrics["optimal_solve_pct"] = float("nan")
 

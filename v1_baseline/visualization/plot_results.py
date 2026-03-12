@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import numpy as np
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -85,14 +85,22 @@ def plot_all(
     color_steer = "tab:blue"
     color_accel = "tab:orange"
 
-    ax_u.plot(times, u_hist[:, 0], color=color_steer, linewidth=0.9, label="Steering [rad]")
+    ax_u.plot(
+        times, u_hist[:, 0], color=color_steer, linewidth=0.9, label="Steering [rad]"
+    )
     ax_u.axhline(-config.delta_max, color=color_steer, linestyle=":", alpha=0.4)
     ax_u.axhline(config.delta_max, color=color_steer, linestyle=":", alpha=0.4)
     ax_u.set_ylabel("Steering [rad]", color=color_steer)
     ax_u.tick_params(axis="y", labelcolor=color_steer)
 
     ax_u2 = ax_u.twinx()
-    ax_u2.plot(times, u_hist[:, 1], color=color_accel, linewidth=0.9, label="Acceleration [m/s^2]")
+    ax_u2.plot(
+        times,
+        u_hist[:, 1],
+        color=color_accel,
+        linewidth=0.9,
+        label="Acceleration [m/s^2]",
+    )
     ax_u2.axhline(config.a_min, color=color_accel, linestyle=":", alpha=0.4)
     ax_u2.axhline(config.a_max, color=color_accel, linestyle=":", alpha=0.4)
     ax_u2.set_ylabel("Acceleration [m/s^2]", color=color_accel)

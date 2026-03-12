@@ -9,7 +9,6 @@ Usage (from repo root):
 from __future__ import annotations
 
 import json
-import logging
 import pathlib
 import sys
 import time
@@ -128,8 +127,8 @@ def run_deepc_simulation(config: DeePCConfig) -> dict:
         step_idx = k + config.Tini  # global time index
 
         # Past trajectory windows
-        u_ini = np.array(u_buffer[-config.Tini:])  # (Tini, m)
-        y_ini = np.array(y_buffer[-config.Tini:])  # (Tini, p)
+        u_ini = np.array(u_buffer[-config.Tini :])  # (Tini, m)
+        y_ini = np.array(y_buffer[-config.Tini :])  # (Tini, p)
 
         # Future reference window
         y_ref_horizon = y_ref_full[step_idx : step_idx + config.N]
@@ -159,7 +158,7 @@ def run_deepc_simulation(config: DeePCConfig) -> dict:
                 f"  Step {k + 1:>4d}/{config.sim_steps}  "
                 f"status={info['status']}  "
                 f"cost={info['cost']:.2f}  "
-                f"solve={t_solve*1000:.1f}ms"
+                f"solve={t_solve * 1000:.1f}ms"
             )
 
     # --- Package results ---
@@ -199,8 +198,7 @@ def save_results(results: dict, version_tag: str) -> None:
     scalars = {
         "costs": results["costs"],
         "sigma_norms": [
-            float(s) if s is not None else None
-            for s in results["sigma_norms"]
+            float(s) if s is not None else None for s in results["sigma_norms"]
         ],
         "statuses": results["statuses"],
         "solve_times": results["solve_times"],

@@ -58,9 +58,7 @@ class DeePCController:
         cfg = self.config
 
         # Verify persistent excitation
-        is_pe = check_persistent_excitation(
-            self.u_data, cfg.L, cfg.m
-        )
+        is_pe = check_persistent_excitation(self.u_data, cfg.L, cfg.m)
         if not is_pe:
             print(
                 "WARNING: data does not satisfy PE condition — "
@@ -105,8 +103,8 @@ class DeePCController:
         self.y_ref_param = cp.Parameter(cfg.N * cfg.p)
 
         # Predicted future trajectories
-        y_future = self.Yf @ self.g   # (N*p,)
-        u_future = self.Uf @ self.g   # (N*m,)
+        y_future = self.Yf @ self.g  # (N*p,)
+        u_future = self.Uf @ self.g  # (N*m,)
 
         # Weight vectors (sqrt of diagonal entries for weighted sum_squares)
         q_sqrt = np.sqrt(np.array(cfg.Q_diag * cfg.N))  # (N*p,)
@@ -114,16 +112,12 @@ class DeePCController:
 
         # Objective — use weighted sum_squares (much faster than quad_form
         # for diagonal weight matrices)
-        tracking_cost = cp.sum_squares(
-            cp.multiply(q_sqrt, y_future - self.y_ref_param)
-        )
+        tracking_cost = cp.sum_squares(cp.multiply(q_sqrt, y_future - self.y_ref_param))
         input_cost = cp.sum_squares(cp.multiply(r_sqrt, u_future))
         reg_g = cfg.lambda_g * cp.sum_squares(self.g)
         reg_sigma = cfg.lambda_y * cp.sum_squares(self.sigma_y)
 
-        objective = cp.Minimize(
-            tracking_cost + input_cost + reg_g + reg_sigma
-        )
+        objective = cp.Minimize(tracking_cost + input_cost + reg_g + reg_sigma)
 
         # Constraints
         constraints: list[cp.Constraint] = [
@@ -206,9 +200,7 @@ class DeePCController:
 
         g_val = self.g.value
         info["g_norm"] = float(np.linalg.norm(g_val))
-        info["sigma_y_norm"] = float(
-            np.linalg.norm(self.sigma_y.value)
-        )
+        info["sigma_y_norm"] = float(np.linalg.norm(self.sigma_y.value))
 
         u_predicted = (self.Uf @ g_val).reshape(cfg.N, cfg.m)
         y_predicted = (self.Yf @ g_val).reshape(cfg.N, cfg.p)
